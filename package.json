@@ -2,7 +2,7 @@
 	"name": "leonidas-test-publish",
 	"displayName": "leonidas-test-publish",
 	"description": "leonidas-test-publish",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "leonidas-test-publish",
 	"private": true,
 	"license": "MIT",
