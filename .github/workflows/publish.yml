@@ -8,7 +8,6 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: release
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -18,5 +17,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install dependencies
         run: npm install
+      - name: Install publisher
+        run: npm install -g @vscode/vsce
       - name: Compile
-        run: npm run compile
+        run: vsce package
+      - name: publish
+        run: vsce publish -p "${{ secrets.VSCODE_PAT }}"

@@ -1,9 +1,9 @@
 {
 	"name": "leonidas-test-publish",
-	"displayName": "Document On Drop Sample",
-	"description": "Shows use of the document on drop API proposal",
-	"version": "0.0.1",
-	"publisher": "vscode-samples",
+	"displayName": "leonidas-test-publish",
+	"description": "leonidas-test-publish",
+	"version": "0.0.2",
+	"publisher": "leonidas-test-publish",
 	"private": true,
 	"license": "MIT",
 	"repository": {
