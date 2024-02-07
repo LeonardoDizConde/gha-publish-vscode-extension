@@ -17,6 +17,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install dependencies
         run: npm install
+      - name: test
+        run: git log -1 --date=iso -- "package.json"
       - name: Install publisher
         run: npm install -g @vscode/vsce
       - name: Compile
