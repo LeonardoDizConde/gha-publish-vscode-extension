@@ -1,6 +1,20 @@
 name: Test publish
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Mode'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - stag
+          - main
+  push:
+    branches:
+      - main
 
 env:
   NODE_VERSION: 16.x
@@ -12,6 +26,8 @@ jobs:
     outputs:
       env: ${{ steps.env.outputs.env }}
     steps:
+      - name: test 0
+        run: echo ${{ inputs.mode }}
       - name: test
         run: echo ${GITHUB_REF#refs/heads/}
       - name: Build SvelteKit according to branch
