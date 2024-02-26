@@ -39,7 +39,7 @@ jobs:
     environment: ${{needs.set-env.outputs.env}}
     steps:
       - name: test
-        run: echo ${{ secrets.NOME }}
+        run: echo [ ${{ secrets.NOME }} == "PROD" ]
 
       - name: Checkout
         uses: actions/checkout@v3
