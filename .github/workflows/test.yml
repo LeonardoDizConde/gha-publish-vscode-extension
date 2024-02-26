@@ -1,8 +1,0 @@
-name: 'teste-outro'
-
-jobs:
-  run:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'a'
-        run: echo a
