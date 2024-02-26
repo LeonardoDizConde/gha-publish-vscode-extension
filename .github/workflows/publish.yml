@@ -12,6 +12,8 @@ jobs:
     outputs:
       env: ${{ steps.env.outputs.ENV }}
     steps:
+      - name: test
+        run: echo ${GITHUB_REF#refs/heads/}
       - name: Build SvelteKit according to branch
         id: env
         run: |
