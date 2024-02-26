@@ -10,7 +10,7 @@ jobs:
   set-env:
     runs-on: ubuntu-latest
     outputs:
-      env: ${{ steps.env.outputs.ENV }}
+      env: ${{ steps.env.outputs.env }}
     steps:
       - name: test
         run: echo ${GITHUB_REF#refs/heads/}
@@ -20,17 +20,18 @@ jobs:
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           case "$BRANCH_NAME" in
             "dev")
-              echo "ENV=DEV" >> "$GITHUB_OUTPUT"
+              echo "env=DEV" >> "$GITHUB_OUTPUT"
               ;;
             "staging")
-              echo "ENV=STAGING" >> "$GITHUB_OUTPUT"
+              echo "env=STAGING" >> "$GITHUB_OUTPUT"
               ;;
             "main")
-              echo "ENV=PROD" >> "$GITHUB_OUTPUT"
+              echo "env=PROD" >> "$GITHUB_OUTPUT"
               ;;
             *)
-              echo "ENV=DEV" >> "$GITHUB_OUTPUT"
+              echo "env=DEV" >> "$GITHUB_OUTPUT"
               ;;
+          esac
 
   publish:
     runs-on: ubuntu-latest
