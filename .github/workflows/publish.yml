@@ -9,28 +9,31 @@ env:
 jobs:
   set-env:
     runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.env.outputs.ENV }}
     steps:
       - name: Build SvelteKit according to branch
+        id: env
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           case "$BRANCH_NAME" in
             "dev")
-              echo "ENV=DEV" >> $GITHUB_ENV
+              echo "ENV=DEV" >> "$GITHUB_OUTPUT"
               ;;
             "staging")
-              echo "ENV=STAGING" >> $GITHUB_ENV
+              echo "ENV=STAGING" >> "$GITHUB_OUTPUT"
               ;;
             "main")
-              echo "ENV=PROD" >> $GITHUB_ENV
+              echo "ENV=PROD" >> "$GITHUB_OUTPUT"
               ;;
             *)
-              echo "ENV=DEV" >> $GITHUB_ENV
+              echo "ENV=DEV" >> "$GITHUB_OUTPUT"
               ;;
 
   publish:
     runs-on: ubuntu-latest
     needs: set-env
-    environment: ${{ env.ENV }}
+    environment: ${{needs.set-env.outputs.env}}
     steps:
       - name: test
         run: echo ${{ secrets.NOME }}
