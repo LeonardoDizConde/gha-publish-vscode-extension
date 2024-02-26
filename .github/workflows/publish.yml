@@ -39,7 +39,12 @@ jobs:
     environment: ${{needs.set-env.outputs.env}}
     steps:
       - name: test
-        run: echo [ ${{ secrets.NOME }} == "PROD" ]
+        run: |
+          if [ ${{ secrets.NOME }} == "PROD" ]; then
+            echo 'funfou'
+          else
+            echo "N FUNFOU"
+          fi
 
       - name: Checkout
         uses: actions/checkout@v3
