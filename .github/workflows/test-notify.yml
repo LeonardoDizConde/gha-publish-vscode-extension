@@ -71,7 +71,7 @@ jobs:
               {
                 "description": "-",
                 "color": "${{ env.DISCORD_COLOR }}",
-                "timestamp": "$(( date --utc +%FT%TZ ))",
+                "timestamp": "$( date --utc +%FT%TZ )",
                 "footer": {
                   "text": "CodeBuild Webhook"
                 },
