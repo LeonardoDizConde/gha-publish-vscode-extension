@@ -29,13 +29,13 @@ jobs:
         run: |
           if [ "${{ github.event.workflow_run.conclusion }}" == 'failure' ];
           then
-            echo "DISCORD_COLOR=1879160" >> $GITHUB_ENV
-            echo "DISCORD_STATUS=Sucesso" >> $GITHUB_ENV
-            echo "DISCORD_MENTION=''" >> $GITHUB_ENV
-          else
             echo "DISCORD_COLOR=15605837" >> $GITHUB_ENV
             echo "DISCORD_STATUS=Falha" >> $GITHUB_ENV
             echo "DISCORD_MENTION=\"content\": \"<@&444573884696756244>\"" >> $GITHUB_ENV
+          else
+            echo "DISCORD_COLOR=1879160" >> $GITHUB_ENV
+            echo "DISCORD_STATUS=Sucesso" >> $GITHUB_ENV
+            echo "DISCORD_MENTION=''" >> $GITHUB_ENV
           fi
 
       - name: Set Environment Variables
@@ -66,7 +66,7 @@ jobs:
           ${{ env.DISCORD_WEBHOOK_ENDPOINT }} \
           -H 'Content-Type: application/json' \
           -d '{
-            '"${{ env.DISCORD_MENTION }}"'
+            ${{ env.DISCORD_MENTION }},
             "embeds": [
               {
                 "description": "-",
