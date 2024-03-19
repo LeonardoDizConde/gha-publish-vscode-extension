@@ -70,32 +70,32 @@ jobs:
             "embeds": [
               {
                 "description": "-",
-                "color": ${env.DISCORD_COLOR},
-                "timestamp": "'$(date --utc +%FT%TZ)'",
+                "color": "${env.DISCORD_COLOR}",
+                "timestamp": "${{ date --utc +%FT%TZ }}",
                 "footer": {
                   "text": "CodeBuild Webhook"
                 },
                 "author": {
-                  "name": "'${{ env.DISCORD_PROJECT_NAME_PRETTY }}'",
-                  "url": "'${{ env.DISCORD_PROJECT_URL }}'"
+                  "name": "${{ env.DISCORD_PROJECT_NAME_PRETTY }}",
+                  "url": "${{ env.DISCORD_PROJECT_URL }}"
                 },
                 "fields": [
                   {
                     "name": "**Commit**",
-                    "value": "'${{ env.CODEBUILD_GIT_SUBJECT }}'"
+                    "value": "${{ env.CODEBUILD_GIT_SUBJECT }}"
                   },
                   {
                     "name": "**Author**",
-                    "value": "'${{ env.CODEBUILD_GIT_AUTHOR }}'"
+                    "value": "${{ env.CODEBUILD_GIT_AUTHOR }}"
                   },
                   {
                     "name": "**Status**",
-                    "value": "'${{ env.DISCORD_STATUS }}'",
+                    "value": "${{ env.DISCORD_STATUS }}",
                     "inline": true
                   },
                   {
                     "name": "**Workflow**",
-                    "value":  "'${{ env.CODEBUILD_WORKFLOW }}'",
+                    "value":  "${{ env.CODEBUILD_WORKFLOW }}",
                     "inline": true
                   }
                 ]
