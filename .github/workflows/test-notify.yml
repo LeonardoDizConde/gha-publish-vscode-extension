@@ -15,6 +15,7 @@ env:
   DISCORD_WEBHOOK_BETA_URL: "https://discord.com/api/webhooks/1219657551981973555/ycRbsloFrniXNufJYz8yB3ooWVa-riQ0QzWw7VA6KR43NIEDi3I7kj5_mvHF6yyrwJli"
   DISCORD_WEBHOOK_PROD_URL: "https://discord.com/api/webhooks/1219657672094126122/VlUgfqYWcd0r1gVNnDCM69PRizPlJykGs3HDObJjyDPYnDZDvTr_F6mCGu9E0IG7icmq"
 
+
 jobs:
   notification:
     runs-on: ubuntu-latest
@@ -61,8 +62,9 @@ jobs:
           esac
 
       - name: Notify Discord
+        env:
+          DATE_NOW: $(date --utc +%FT%TZ)
         run: |
-          DATE_NOW=$(date --utc +%FT%TZ)
           curl -X POST \
           ${{ env.DISCORD_WEBHOOK_ENDPOINT }} \
           -H 'Content-Type: application/json' \
