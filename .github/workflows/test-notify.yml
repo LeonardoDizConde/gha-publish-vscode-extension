@@ -1,4 +1,4 @@
-name: Test Notify
+name: CodeBuild Webhook Notification
 
 on:
   workflow_run:
@@ -10,11 +10,95 @@ on:
 permissions:
   actions: read
 
+env:
+  DISCORD_PROJECT_NAME_PRETTY: Test
+  DISCORD_WEBHOOK_BETA_URL: "https://discord.com/api/webhooks/1219657551981973555/ycRbsloFrniXNufJYz8yB3ooWVa-riQ0QzWw7VA6KR43NIEDi3I7kj5_mvHF6yyrwJli"
+  DISCORD_WEBHOOK_PROD_URL: "https://discord.com/api/webhooks/1219657672094126122/VlUgfqYWcd0r1gVNnDCM69PRizPlJykGs3HDObJjyDPYnDZDvTr_F6mCGu9E0IG7icmq"
+
 jobs:
   notification:
     runs-on: ubuntu-latest
     steps:
-      - name: print
-        env:
-          JOB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$JOB_CONTEXT"
+      - name: Set Push Info Variables
+        run: |
+          echo "CODEBUILD_GIT_SUBJECT=$(git log -1 --pretty=%s)" >> $GITHUB_ENV
+          echo "CODEBUILD_GIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
+          echo "CODEBUILD_WORKFLOW=${{ github.event.workflow.name }}" >> $GITHUB_ENV
+
+      - name: Set Deploy Status Variables
+        run: |
+          if [ "${{ github.event.workflow_run.conclusion }}" == 'failure' ];
+          then
+            echo "DISCORD_COLOR=1879160" >> $GITHUB_ENV
+            echo "DISCORD_STATUS=Sucesso" >> $GITHUB_ENV
+            echo "DISCORD_MENTION=''" >> $GITHUB_ENV
+          else
+            echo "DISCORD_COLOR=15605837" >> $GITHUB_ENV
+            echo "DISCORD_STATUS=Falha" >> $GITHUB_ENV
+            echo "DISCORD_MENTION=\"content\": \"<@&444573884696756244>\"" >> $GITHUB_ENV
+          fi
+
+      - name: Set Environment Variables
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          case "$BRANCH_NAME" in
+            "dev")
+              echo "DISCORD_WEBHOOK_ENDPOINT=${{ env.DISCORD_WEBHOOK_BETA_URL }}" >> $GITHUB_ENV
+              echo "DISCORD_PROJECT_URL=https://www.google.com/a" >> $GITHUB_ENV
+              ;;
+            "staging")
+              echo "DISCORD_WEBHOOK_ENDPOINT=${{ env.DISCORD_WEBHOOK_BETA_URL }}" >> $GITHUB_ENV
+              echo "DISCORD_PROJECT_URL=https://www.google.com/b" >> $GITHUB_ENV
+              ;;
+            "master")
+              echo "DISCORD_WEBHOOK_ENDPOINT=${{ env.DISCORD_WEBHOOK_PROD_URL }}" >> $GITHUB_ENV
+              echo "DISCORD_PROJECT_URL=https://www.google.com/c" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "DISCORD_WEBHOOK_ENDPOINT=${{ env.DISCORD_WEBHOOK_BETA_URL }}" >> $GITHUB_ENV
+              echo "DISCORD_PROJECT_URL=https://www.google.com/d" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Notify Discord
+        run: |
+          curl -X POST \
+          ${{ env.DISCORD_WEBHOOK_ENDPOINT }} \
+          -H 'Content-Type: application/json' \
+          -d '{
+            '"${{ env.DISCORD_MENTION }}"'
+            "embeds": [
+              {
+                "description": "-",
+                "color": ${env.DISCORD_COLOR},
+                "timestamp": "'$(date --utc +%FT%TZ)'",
+                "footer": {
+                  "text": "CodeBuild Webhook"
+                },
+                "author": {
+                  "name": "'${{ env.DISCORD_PROJECT_NAME_PRETTY }}'",
+                  "url": "'${{ env.DISCORD_PROJECT_URL }}'"
+                },
+                "fields": [
+                  {
+                    "name": "**Commit**",
+                    "value": "'${{ env.CODEBUILD_GIT_SUBJECT }}'"
+                  },
+                  {
+                    "name": "**Author**",
+                    "value": "'${{ env.CODEBUILD_GIT_AUTHOR }}'"
+                  },
+                  {
+                    "name": "**Status**",
+                    "value": "'${{ env.DISCORD_STATUS }}'",
+                    "inline": true
+                  },
+                  {
+                    "name": "**Workflow**",
+                    "value":  "'${{ env.CODEBUILD_WORKFLOW }}'",
+                    "inline": true
+                  }
+                ]
+              }
+            ]
+          }'
