@@ -15,4 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: print
-        run: echo "${ toJson(github.event.workflow_run) }"
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
