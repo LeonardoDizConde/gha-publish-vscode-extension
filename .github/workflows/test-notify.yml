@@ -16,5 +16,5 @@ jobs:
     steps:
       - name: print
         env:
-          JOB_CONTEXT: ${{ toJson(job) }}
+          JOB_CONTEXT: ${{ toJson(github) }}
         run: echo "$JOB_CONTEXT"
