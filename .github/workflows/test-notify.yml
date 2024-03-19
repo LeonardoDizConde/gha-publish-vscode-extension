@@ -21,9 +21,9 @@ jobs:
     steps:
       - name: Set Push Info Variables
         run: |
-          echo "CODEBUILD_GIT_SUBJECT=$(git log -1 --pretty=%s)" >> $GITHUB_ENV
-          echo "CODEBUILD_GIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
-          echo "CODEBUILD_WORKFLOW=${{ github.event.workflow.name }}" >> $GITHUB_ENV
+          echo "CODEBUILD_GIT_SUBJECT=${{ github.event.workflow_run.head_commit.message }}" >> $GITHUB_ENV
+          echo "CODEBUILD_GIT_AUTHOR=${{ github.event.workflow_run.head_commit.committer.name }}" >> $GITHUB_ENV
+          echo "CODEBUILD_WORKFLOW=${{ github.event.workflow_run.name }}" >> $GITHUB_ENV
 
       - name: Set Deploy Status Variables
         run: |
@@ -71,6 +71,7 @@ jobs:
               {
                 "description": "-",
                 "color": "${{ env.DISCORD_COLOR }}",
+                "timestamp": "$(( date --utc +%FT%TZ ))",
                 "footer": {
                   "text": "CodeBuild Webhook"
                 },
