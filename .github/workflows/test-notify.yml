@@ -62,8 +62,6 @@ jobs:
           esac
 
       - name: Notify Discord
-        env:
-          DATE_NOW: $(date --utc +%FT%TZ)
         run: |
           curl -X POST \
           ${{ env.DISCORD_WEBHOOK_ENDPOINT }} \
@@ -74,7 +72,7 @@ jobs:
               {
                 "description": "-",
                 "color": "${{ env.DISCORD_COLOR }}",
-                "timestamp": "${{ env.DATE_NOW }}",
+                 "timestamp": '"\"$(date --utc +%FT%TZ)\""',
                 "footer": {
                   "text": "CodeBuild Webhook"
                 },
