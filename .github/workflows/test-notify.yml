@@ -70,7 +70,7 @@ jobs:
             "embeds": [
               {
                 "description": "-",
-                "color": "${env.DISCORD_COLOR}",
+                "color": "${{ env.DISCORD_COLOR }}",
                 "footer": {
                   "text": "CodeBuild Webhook"
                 },
